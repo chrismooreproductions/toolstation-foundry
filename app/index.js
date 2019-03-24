@@ -4,7 +4,8 @@ import { render } from 'react-dom'
 class App extends React.Component {
 	componentDidMount() {
 		fetch(`/api/submit-survey`)
-			.then(response => console.log(response.message))
+			.then(response => {return response.json()})
+			.then(responseJson => console.log(responseJson.message))
 	}
 
   render() {
