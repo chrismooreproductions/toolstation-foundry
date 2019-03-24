@@ -1,10 +1,13 @@
 const express = require('express');
-
+const bodyParser = require('body-parser')
 const app = express()
 
-app.get('/api/submit-survey', (req, res) => {
-  console.log('You hit the submit survey endpoint!')
-  res.send({ "message": "you hit the submit survey endpoint!" });
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
+
+app.post('/api/submit-survey', (request, response) => {
+  console.log(request.body)
+  response.send({ message: "you hit the submit survey endpoint!" });
 })
 
 app.listen(3001, () =>

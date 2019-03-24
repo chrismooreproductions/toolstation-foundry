@@ -7,7 +7,7 @@
     "server": "node server/index.js",
     "dev:app": "webpack-dev-server --open --config webpack.app.dev.js",
     "build:app": "webpack --config webpack.app.prod.js",
-    "dev:server": "nodemon ./server/index.js",
+    "dev:server": "nodemon ./server/index.js --ignore './app' --ignore './dist'",
     "start:dev": "run-p dev:app dev:server",
     "start": "run-p build:app && server",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,6 +19,7 @@
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.5",
+    "body-parser": "^1.18.3",
     "clean-webpack-plugin": "^2.0.1",
     "css-loader": "^2.1.1",
     "favicons-webpack-plugin": "0.0.9",
