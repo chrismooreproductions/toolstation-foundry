@@ -5,8 +5,8 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 
 module.exports = {
   entry: {
-    app: "./src/index.js",
-    styles: "./src/styles.scss"
+    app: "./app/index.js",
+    styles: "./app/styles.scss"
   },
   module: {
     rules: [
@@ -34,7 +34,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebPackPlugin({
-      template: "./src/index.html",
+      template: "./app/index.html",
       filename: "./index.html"
     }),
     new FaviconsWebpackPlugin('./logo.png')
