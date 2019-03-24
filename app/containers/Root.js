@@ -1,5 +1,5 @@
 import * as React from 'react'
-import FormPage from './FormPage'
+import FormContainer from './FormContainer'
 import Modal from '../components/Modal'
 
 export default class Root extends React.Component {
@@ -8,18 +8,35 @@ export default class Root extends React.Component {
     this.state = {
       page: 1,
       payloadData: {
-        title: 'Mr',
-        name: 'Chris Moore',
-        dob: '13/11/1985',
-        location: 'here',
-        dateTime: '16:01 24/03/2019'
+        title: {
+          type: 'input',
+          value: 'Mr'
+        },
+        name: {
+          type: 'input',
+          value: 'Chris Moore'
+        },
+        dob: {
+          type: 'input',
+          value: '13/11/1985',
+        },
+        location: {
+          type: 'input',
+          value: 'here'
+        },
+        dateTime: {
+          type: 'input',
+          value: '16:01 24/03/2019'
+        }
       },
       displayModal: false,
-      modalMessage: ''
+      modalMessage: '',
+      modalStatus: ''
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.incrementPage = this.incrementPage.bind(this)
     this.decrementPage = this.decrementPage.bind(this)
+    this.hideModal = this.hideModal.bind(this)
   }
 
   handleSubmit(e) {
@@ -38,13 +55,15 @@ export default class Root extends React.Component {
       console.log(responseJson.message)
       this.setState({
         displayModal: true,
-        modalMessage: 'Thank you for your feedback'
+        modalMessage: 'Thank you for your feedback',
+        modalStatus: 'success'
       })
     })
     .catch(error => {
       this.setState({
         displayModal: true,
-        modalMessage: 'Could not post feedback, try again later'
+        modalMessage: 'Could not post feedback, try again later',
+        modalStatus: 'failure'
       })
     })
   }
@@ -53,30 +72,44 @@ export default class Root extends React.Component {
     const { page } = this.state
     this.setState({ page: page - 1 })
   }
+
   incrementPage() {
     const { page } = this.state
     this.setState({ page: page + 1 })
   }
 
   showForm() {
-    const { page } = this.state
+    const { page, payloadData } = this.state
+    const pageOneData = [
+      payloadData.title,
+      payloadData.name,
+      payloadData.dob
+    ]
+    const pageTwoData = [
+      payloadData.title,
+      payloadData.name,
+      payloadData.dob
+    ]
+
     switch(page) {
       case(1):
         return (
-          <FormPage 
+          <FormContainer 
             page={page}
             showNext
             incrementPage={this.incrementPage}
+            data={pageOneData}
           />
         )
       case(2):
         return (
-          <FormPage 
+          <FormContainer 
             page={page}
             showPrevious
             decrementPage={this.decrementPage}
             showSubmit
             handleSubmit={this.handleSubmit}
+            data={pageTwoData}
           />
         )
       default: 
@@ -84,16 +117,26 @@ export default class Root extends React.Component {
     }
   }
 
+  hideModal() {
+    this.setState({
+      displayModal: false,
+      page: 1
+    })
+  }
+
   render() {
+    const { displayModal, modalMessage, modalStatus } = this.state
     return (
       <div className="app-wrapper">
         <div className="form-wrapper">
           <h1>Customer Feedback</h1>
           {this.showForm()}
         </div>
-        <Modal 
-          displayModal={this.state.displayModal}
-          modalMessage={this.state.modalMessage}
+        <Modal
+          hideModal={this.hideModal}
+          displayModal={displayModal}
+          modalMessage={modalMessage}
+          modalStatus={modalStatus}
         />
       </div>
     )
