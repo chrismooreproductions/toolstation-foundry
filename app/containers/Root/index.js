@@ -1,6 +1,6 @@
 import * as React from 'react'
-import FormContainer from './FormContainer'
-import Modal from '../components/Modal'
+import FormContainer from '../FormContainer'
+import Modal from '../../components/Modal'
 
 export default class Root extends React.Component {
   constructor(props) {
@@ -10,23 +10,23 @@ export default class Root extends React.Component {
       payloadData: {
         title: {
           type: 'input',
-          value: 'Mr'
+          value: ''
         },
         name: {
           type: 'input',
-          value: 'Chris Moore'
+          value: ''
         },
         dob: {
           type: 'input',
-          value: '13/11/1985',
+          value: '',
         },
         location: {
           type: 'input',
-          value: 'here'
+          value: ''
         },
         dateTime: {
           type: 'input',
-          value: '16:01 24/03/2019'
+          value: ''
         }
       },
       displayModal: false,
@@ -42,18 +42,24 @@ export default class Root extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    console.log('submitting...')
+    const {title, name, dob, location, dateTime} = this.state.payloadData
+    const payload = {
+      title: title.value,
+      name: name.value,
+      dob: dob.value,
+      location: location.value,
+      dateTime: dateTime.value
+    }
     fetch(`/api/submit-survey`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       method: 'post',
-      body: JSON.stringify(this.state.payloadData)
+      body: JSON.stringify(payload)
     }) 
     .then(response => response.json())
     .then(responseJson => {
-      console.log(responseJson.message)
       this.setState({
         displayModal: true,
         modalMessage: 'Thank you for your feedback',
