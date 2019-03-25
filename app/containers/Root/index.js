@@ -1,6 +1,7 @@
 import * as React from 'react'
 import FormContainer from '../FormContainer'
 import Modal from '../../components/Modal'
+import moment from 'moment';
 
 export default class Root extends React.Component {
   constructor(props) {
@@ -9,35 +10,42 @@ export default class Root extends React.Component {
       page: 1,
       payloadData: {
         title: {
-          type: 'input',
-          value: ''
+          type: 'select',
+          value: 'Mr',
+          label: 'Title'
         },
         name: {
           type: 'input',
-          value: ''
+          value: '',
+          label: 'Name'
         },
         dob: {
-          type: 'input',
+          type: 'date',
           value: '',
+          label: 'Date of Birth'
         },
         location: {
-          type: 'input',
-          value: ''
+          type: 'submit',
+          value: '',
+          label: 'Location'
         },
         dateTime: {
           type: 'input',
-          value: ''
+          value: moment().format('MMMM Do YYYY, h:mm'),
+          label: 'Today\'s date'
         }
       },
       displayModal: false,
       modalMessage: '',
-      modalStatus: ''
+      modalStatus: '',
+      fetchingLocation: false
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.incrementPage = this.incrementPage.bind(this)
     this.decrementPage = this.decrementPage.bind(this)
     this.hideModal = this.hideModal.bind(this)
     this.onChange = this.onChange.bind(this)
+    this.getCurrentLocation = this.getCurrentLocation.bind(this)
   }
 
   handleSubmit(e) {
@@ -117,6 +125,9 @@ export default class Root extends React.Component {
             showSubmit
             handleSubmit={this.handleSubmit}
             onChange={this.onChange}
+            getCurrentLocation={this.getCurrentLocation}
+            fetchingLocation={this.state.fetchingLocation}
+            location={this.state.location}
             data={data}
           />
         )
@@ -131,6 +142,35 @@ export default class Root extends React.Component {
     this.setState({
       payloadData: prop
     })
+  }
+
+  async getCurrentLocation() {
+    try {
+      this.setState({fetchingLocation: true})
+      if (navigator.geolocation) {
+        await navigator.geolocation.getCurrentPosition(position => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }
+          const prop = Object.assign({}, this.state.payloadData)
+          prop.location.value = pos
+          return this.setState({
+            payloadData: prop,
+            fetchingLocation: false
+          })
+        })
+      }
+    } 
+    catch(err) {
+      console.log('Unable to fetch location...')
+      this.setState({
+        fetchingLocation: false,
+        displayModal: false,
+        modalMessage: 'Unable to fetch location...',
+        modalStatus: '',
+      })
+    }
   }
 
   hideModal() {

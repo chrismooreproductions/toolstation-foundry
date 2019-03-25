@@ -1,26 +1,67 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 export default class FormContainer extends React.Component {
-  renderFormFields() {
-    const { onChange } = this.props
-    function capitalizeFirstLetter(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    }
+  renderTitles() {
+    const titles = [
+      'Mr',
+      'Mrs',
+      'Dr',
+    ]
+    return titles.map(title => {
+      return (
+        <option key={title} value={title}>
+          {title}
+        </option>
+      )
+    })
+  }
+
+  renderInputFields() {
+    const { onChange, getCurrentLocation, fetchingLocation } = this.props
     return Object.keys(this.props.data).map((property, index) => {
+      const {label, type, value} = this.props.data[property]
       return (
         <div 
-          className="form-fields__instance"
-          key={`${property}`}
+        className="form-fields__instance"
+        key={`${property}`}
         >
-          <label>{capitalizeFirstLetter(property)}</label>
-          <input 
-            type={this.props.data[property].type}
-            name={property}
-            className="form-input"
-            value={this.props.data[property].value}
-            onChange={onChange}
-          />
+          {type === 'select' ? 
+            <select className={`form-input`} name={property} onChange={onChange}>
+              {this.renderTitles()}
+            </select>
+          : 
+            <div>
+              {type === 'submit' && fetchingLocation && 
+                <span className="form-input__spinner">
+                  <FontAwesomeIcon
+                    icon={faSpinner}
+                    size="2x"
+                  />
+                </span>
+              }
+              <input 
+                type={type}
+                required
+                name={property}
+                className={property !== 'location' ? "form-input" : "form-input form-input__with-spinner"}
+                value={type === 'submit' ? 'Fetch Location' : value}
+                disabled={property === 'dateTime' ? true : false}
+                placeholder={label}
+                onChange={onChange}
+                onClick={type === 'submit' ? getCurrentLocation : () => {}}
+              />
+              {type === 'submit' && value !== '' &&
+                <div className="form-fields__location-wrapper">
+                  <div>Your location is...</div>
+                  <div>latitude: {value.lat}</div>
+                  <div>longitude: {value.lng}</div> 
+                </div>
+              }
+            </div>
+          }
         </div>
       )
     })
@@ -32,7 +73,7 @@ export default class FormContainer extends React.Component {
       <div className="form">
         <h1>Page {page}</h1>
         <div className="form-fields">
-          {this.renderFormFields()}
+          {this.renderInputFields()}
         </div>
         {(showNext || showPrevious) && 
           <div

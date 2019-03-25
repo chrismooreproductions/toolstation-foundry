@@ -1,3 +1,5 @@
+@import 'variables';
+
 .form {
   display: flex;
   flex-direction: column;
@@ -13,8 +15,7 @@
   align-items: center;
   position: relative;
   height: 100%;
-  padding: 14px;
-  border: 3px #80808063 solid;
+  padding: 14px 0;
   border-radius: 6px;
 
 }
@@ -26,39 +27,90 @@
 }
 
 .form-button {
+  padding: 11px;
   width: 100%;
-  padding: 20px;
+  font-size: 1.4rem;
+  border-radius: 46px;
   border: 1px solid grey;
 
 }
 
 .form-button__show-next, .form-button__show-previous {
-  background-color: #3bb6f9;
+  background-color: #007ce1;
+  color: white;
 
 }
 
 .form-button__submit {
-  margin-top: 20px;
-  background-color: #19da19d1;
+  margin-top: 14px;
+  background-color: #0b880bd1;
+  color: white;
   
 }
 
 .form-input {
   width: 100%;
-  margin-bottom: 1.2rem;
   font-size: 1.6rem;
-  padding: 5px;
+  padding: 14px 20px;
+  border: 1px solid;
+  border-color: #b5b5b5;
+  box-shadow: inset 0 1px 2px rgba(10,10,10,.1);
+  border-radius: 46px;
+  font-size: 1.2rem;
+  font-family: inherit !important;
+
+  &::placeholder {
+    color: #b5b5b5 !important;
+  }
+  
+  &:invalid::-webkit-datetime-edit {
+    color: #b5b5b5 !important;
+  }
+
+  &:focus {
+    border-color: $input-blue;
+    box-shadow: 0 1px 2px rgba(10,10,10,.1);
+    outline: none;
+  }
 
 }
 
 .form-fields {
-  min-height: 270px;
+  min-height: 325px;
   width: 100%;
-  margin: 14px;
 
 }
 
 .form-fields__instance {
   width: 100%;
-  
+  margin: 2.1rem 0 2.5rem;
+
+}
+
+.form-input__with-spinner {
+  position: relative;
+}
+
+.form-input__spinner {
+  position: absolute;
+  z-index: 100;
+  right: 0;
+  padding: 10px;
+  animation: spin 2s linear infinite;
+
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+
+}
+
+.form-fields__location-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border: 1px solid black;
+  margin-top: 14px;
+  border-radius: 10px;
 }
