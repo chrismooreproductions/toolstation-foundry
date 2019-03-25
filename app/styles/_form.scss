@@ -14,7 +14,7 @@
   position: relative;
   height: 100%;
   padding: 14px;
-  border: 1px grey solid;
+  border: 3px #80808063 solid;
   border-radius: 6px;
   box-shadow: 0px 0px 7px 0px rgba(128,128,128,1);
 
@@ -49,13 +49,17 @@
   margin-bottom: 1.2rem;
   font-size: 1.6rem;
   padding: 5px;
+
 }
 
 .form-fields {
   min-height: 270px;
   width: 100%;
+  margin: 14px;
+
 }
 
 .form-fields__instance {
   width: 100%;
+  
 }
