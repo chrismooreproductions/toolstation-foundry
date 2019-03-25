@@ -85,7 +85,7 @@ export default class Root extends React.Component {
     this.setState({ page: page + 1 })
   }
 
-  showForm() {
+  renderForm() {
     const { page, payloadData } = this.state
     let data = {}
     switch(page) {
@@ -146,7 +146,7 @@ export default class Root extends React.Component {
       <div className="app-wrapper">
         <div className="form-wrapper">
           <h1>Customer Feedback</h1>
-          {this.showForm(page)}
+          {this.renderForm(page)}
         </div>
         <Modal
           hideModal={this.hideModal}
