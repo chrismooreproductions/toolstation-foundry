@@ -1,102 +1,29 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-import moment from 'moment'
+import Form from '../../components/form'
+import Buttons from '../../components/Form/Buttons';
 
 export default class FormContainer extends React.Component {
-  renderTitles() {
-    const titles = [
-      'Mr',
-      'Mrs',
-      'Dr',
-    ]
-    return titles.map(title => {
-      return (
-        <option key={title} value={title}>
-          {title}
-        </option>
-      )
-    })
-  }
-
-  renderInputFields() {
-    const { onChange, getCurrentLocation, fetchingLocation } = this.props
-    return Object.keys(this.props.data).map((property, index) => {
-      const {label, type, value} = this.props.data[property]
-      return (
-        <div 
-        className="form-fields__instance"
-        key={`${property}`}
-        >
-          {type === 'select' ? 
-            <select className={`form-input`} name={property} onChange={onChange}>
-              {this.renderTitles()}
-            </select>
-          : 
-            <div>
-              {type === 'submit' && fetchingLocation && 
-                <span className="form-input__spinner">
-                  <FontAwesomeIcon
-                    icon={faSpinner}
-                    size="2x"
-                  />
-                </span>
-              }
-              <input 
-                type={type}
-                required
-                name={property}
-                className={property !== 'location' ? "form-input" : "form-input form-input__with-spinner"}
-                value={type === 'submit' ? 'Fetch Location' : property === 'dateTime' ? moment(value, 'YYYYMMDhmm').format('MMMM Do YYYY, h:mm') : value}
-                disabled={property === 'dateTime' ? true : false}
-                placeholder={label}
-                onChange={onChange}
-                onClick={type === 'submit' ? getCurrentLocation : () => {}}
-              />
-              {type === 'submit' && value !== '' &&
-                <div className="form-fields__location-wrapper">
-                  <div>Your location is...</div>
-                  <div>latitude: {value.lat}</div>
-                  <div>longitude: {value.lng}</div> 
-                </div>
-              }
-            </div>
-          }
-        </div>
-      )
-    })
-  }
-
   render() {
     const { page, showNext, showPrevious, incrementPage, decrementPage, showSubmit, handleSubmit} = this.props
     return (
       <div className="form">
         <h1>Page {page}</h1>
         <div className="form-fields">
-          {this.renderInputFields()}
+          <Form 
+            data={this.props.data}
+            onChange={this.props.onChange}
+            getCurrentLocation={this.props.getCurrentLocation}
+            fetchingLocation={this.props.fetchingLocation}
+          />
         </div>
         {(showNext || showPrevious) && 
-          <div
-            className="form-button__wrapper"
-          >
-            {showNext && 
-              <button
-                className={`form-button form-button__show-next`}
-                onClick={incrementPage}
-              >
-                Next
-              </button>
-            }
-            {showPrevious && 
-              <button
-                className={`form-button form-button__show-next`}
-                onClick={decrementPage}
-              >
-                Previous
-              </button>
-            }
-          </div>
+          <Buttons
+            showNext={showNext}
+            incrementPage={incrementPage}
+            showPrevious={showPrevious}
+            decrementPage={decrementPage}
+          />
         }
         {showSubmit &&
           <div
