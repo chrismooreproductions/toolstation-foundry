@@ -46,7 +46,16 @@
 
 .form-input {
   width: 100%;
-  margin-bottom: 35px;
+  margin-bottom: 1.2rem;
   font-size: 1.6rem;
   padding: 5px;
+}
+
+.form-fields {
+  min-height: 270px;
+  width: 100%;
+}
+
+.form-fields__instance {
+  width: 100%;
 }

@@ -2,26 +2,26 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 export default class FormContainer extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      data: this.props.data
-    } 
-  }
-
-  componentDidMount() {
-    this.setState({data: this.props.data})
-  }
-
-  renderFormFields(data) {
-    return data.map((property, index) => {
+  renderFormFields() {
+    const { onChange } = this.props
+    function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    return Object.keys(this.props.data).map((property, index) => {
       return (
-        <input 
-          key={index}
-          type={property.type}
-          className="form-input"
-          value={property.value}
-        />
+        <div 
+          className="form-fields__instance"
+          key={`${property}`}
+        >
+          <label>{capitalizeFirstLetter(property)}</label>
+          <input 
+            type={this.props.data[property].type}
+            name={property}
+            className="form-input"
+            value={this.props.data[property].value}
+            onChange={onChange}
+          />
+        </div>
       )
     })
   }
@@ -31,7 +31,9 @@ export default class FormContainer extends React.Component {
     return (
       <div className="form">
         <h1>Page {page}</h1>
-        {this.renderFormFields(this.state.data)}
+        <div className="form-fields">
+          {this.renderFormFields()}
+        </div>
         {(showNext || showPrevious) && 
           <div
             className="form-button__wrapper"
@@ -72,7 +74,7 @@ export default class FormContainer extends React.Component {
 }
 
 FormContainer.propTypes = {
-  data: PropTypes.array.isRequired,
+  data: PropTypes.shape({}).isRequired,
   page: PropTypes.number.isRequired,
   incrementPage: PropTypes.func,
   decrementPage: PropTypes.func,

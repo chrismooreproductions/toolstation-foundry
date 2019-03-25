@@ -37,6 +37,7 @@ export default class Root extends React.Component {
     this.incrementPage = this.incrementPage.bind(this)
     this.decrementPage = this.decrementPage.bind(this)
     this.hideModal = this.hideModal.bind(this)
+    this.onChange = this.onChange.bind(this)
   }
 
   handleSubmit(e) {
@@ -80,41 +81,50 @@ export default class Root extends React.Component {
 
   showForm() {
     const { page, payloadData } = this.state
-    const pageOneData = [
-      payloadData.title,
-      payloadData.name,
-      payloadData.dob
-    ]
-    const pageTwoData = [
-      payloadData.title,
-      payloadData.name,
-      payloadData.dob
-    ]
-
+    let data = {}
     switch(page) {
       case(1):
+        data = {
+          title: payloadData.title,
+          name: payloadData.name,
+          dob: payloadData.dob
+        }
         return (
-          <FormContainer 
+          <FormContainer
             page={page}
             showNext
             incrementPage={this.incrementPage}
-            data={pageOneData}
+            data={data}
+            onChange={this.onChange}
           />
         )
       case(2):
+        data = {
+          location: payloadData.location,
+          dateTime: payloadData.dateTime,
+        }
         return (
-          <FormContainer 
+          <FormContainer
             page={page}
             showPrevious
             decrementPage={this.decrementPage}
             showSubmit
             handleSubmit={this.handleSubmit}
-            data={pageTwoData}
+            onChange={this.onChange}
+            data={data}
           />
         )
       default: 
         return
     }
+  }
+
+  onChange(event) {
+    const prop = Object.assign({}, this.state.payloadData)
+    prop[event.target.name].value = event.target.value
+    this.setState({
+      payloadData: prop
+    })
   }
 
   hideModal() {
@@ -125,12 +135,12 @@ export default class Root extends React.Component {
   }
 
   render() {
-    const { displayModal, modalMessage, modalStatus } = this.state
+    const { displayModal, modalMessage, modalStatus, page } = this.state
     return (
       <div className="app-wrapper">
         <div className="form-wrapper">
           <h1>Customer Feedback</h1>
-          {this.showForm()}
+          {this.showForm(page)}
         </div>
         <Modal
           hideModal={this.hideModal}
