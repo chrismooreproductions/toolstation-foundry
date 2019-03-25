@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import moment from 'moment'
 
 export default class FormContainer extends React.Component {
   renderTitles() {
@@ -47,7 +48,7 @@ export default class FormContainer extends React.Component {
                 required
                 name={property}
                 className={property !== 'location' ? "form-input" : "form-input form-input__with-spinner"}
-                value={type === 'submit' ? 'Fetch Location' : value}
+                value={type === 'submit' ? 'Fetch Location' : property === 'dateTime' ? moment(value, 'YYYYMMDhmm').format('MMMM Do YYYY, h:mm') : value}
                 disabled={property === 'dateTime' ? true : false}
                 placeholder={label}
                 onChange={onChange}

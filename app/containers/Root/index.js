@@ -31,7 +31,7 @@ export default class Root extends React.Component {
         },
         dateTime: {
           type: 'input',
-          value: moment().format('MMMM Do YYYY, h:mm'),
+          value: moment().format('YYYYMMDhmm'),
           label: 'Today\'s date'
         }
       },
