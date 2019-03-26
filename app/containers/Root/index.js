@@ -2,6 +2,7 @@ import * as React from 'react'
 import FormContainer from '../FormContainer'
 import Modal from '../../components/Modal'
 import moment from 'moment';
+import request from './request'
 
 export default class Root extends React.Component {
   constructor(props) {
@@ -9,31 +10,11 @@ export default class Root extends React.Component {
     this.state = {
       page: 1,
       payloadData: {
-        title: {
-          type: 'select',
-          value: 'Mr',
-          label: 'Title'
-        },
-        name: {
-          type: 'input',
-          value: '',
-          label: 'Name'
-        },
-        dob: {
-          type: 'date',
-          value: '',
-          label: 'Date of Birth'
-        },
-        location: {
-          type: 'submit',
-          value: '',
-          label: 'Location'
-        },
-        dateTime: {
-          type: 'input',
-          value: moment().format('YYYYMMDhmm'),
-          label: 'Today\'s date'
-        }
+        title: {type: 'select', value: 'Mr', label: 'Title'},
+        name: {type: 'input', value: '', label: 'Name'},
+        dob: {type: 'date', value: '', label: 'Date of Birth'},
+        location: {type: 'submit', value: '', label: 'Location'},
+        dateTime: {type: 'input', value: moment().format('YYYYMMDhmm'), label: 'Today\'s date'}
       },
       displayModal: false,
       modalMessage: '',
@@ -46,40 +27,22 @@ export default class Root extends React.Component {
     this.hideModal = this.hideModal.bind(this)
     this.onChange = this.onChange.bind(this)
     this.getCurrentLocation = this.getCurrentLocation.bind(this)
+    this.setResponseState = this.setResponseState.bind(this)
   }
 
-  handleSubmit(e) {
-    e.preventDefault()
-    const {title, name, dob, location, dateTime} = this.state.payloadData
-    const payload = {
-      title: title.value,
-      name: name.value,
-      dob: dob.value,
-      location: location.value,
-      dateTime: dateTime.value
-    }
-    fetch(`/api/submit-survey`, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: 'post',
-      body: JSON.stringify(payload)
-    }) 
-    .then(response => response.json())
-    .then(responseJson => {
-      this.setState({
-        displayModal: true,
-        modalMessage: 'Thank you for your feedback',
-        modalStatus: 'success'
-      })
+  setResponseState() {
+    return this.setState({
+      displayModal: true,
+      modalMessage: 'Thank you for your feedback',
+      modalStatus: 'success'
     })
-    .catch(error => {
-      this.setState({
-        displayModal: true,
-        modalMessage: 'Could not post feedback, try again later',
-        modalStatus: 'failure'
-      })
+  }
+
+  async handleSubmit(e) {
+    e.preventDefault()
+    await request(this.state.payloadData, this.setResponseState)
+    this.setState({
+
     })
   }
 
@@ -122,13 +85,13 @@ export default class Root extends React.Component {
             page={page}
             showPrevious
             decrementPage={this.decrementPage}
+            data={data}
+            onChange={this.onChange}
             showSubmit
             handleSubmit={this.handleSubmit}
-            onChange={this.onChange}
-            getCurrentLocation={this.getCurrentLocation}
             fetchingLocation={this.state.fetchingLocation}
+            getCurrentLocation={this.getCurrentLocation}
             location={this.state.location}
-            data={data}
           />
         )
       default: 

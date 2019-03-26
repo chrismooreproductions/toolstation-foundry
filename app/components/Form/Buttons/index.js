@@ -17,6 +17,18 @@ const Buttons = props => {
           decrementPage={props.decrementPage}
         />
       }
+      {props.showSubmit && 
+        <div
+          className="form-button__wrapper"
+        >
+          <button
+              className={`form-button form-button__submit`}
+              onClick={props.handleSubmit}
+            >
+              Submit
+          </button>
+        </div>
+      }
     </div>
   )
 }
