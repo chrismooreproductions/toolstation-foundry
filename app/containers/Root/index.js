@@ -7,15 +7,10 @@ import request from './request'
 export default class Root extends React.Component {
   constructor(props) {
     super(props)
+
     this.state = {
       page: 1,
-      payloadData: {
-        title: {type: 'select', value: 'Mr', label: 'Title'},
-        name: {type: 'input', value: '', label: 'Name'},
-        dob: {type: 'date', value: '', label: 'Date of Birth'},
-        location: {type: 'submit', value: '', label: 'Location'},
-        dateTime: {type: 'input', value: moment().format('YYYYMMDhmm'), label: 'Today\'s date'}
-      },
+      payloadData: this.initialState(),
       displayModal: false,
       modalMessage: '',
       modalStatus: '',
@@ -28,6 +23,17 @@ export default class Root extends React.Component {
     this.onChange = this.onChange.bind(this)
     this.getCurrentLocation = this.getCurrentLocation.bind(this)
     this.setResponseState = this.setResponseState.bind(this)
+    this.initialState = this.initialState.bind(this)
+  }
+
+  initialState() {
+    return {
+      title: {type: 'select', value: 'Mr', label: 'Title'},
+      name: {type: 'input', value: '', label: 'Name'},
+      dob: {type: 'date', value: '', label: 'Date of Birth'},
+      location: {type: 'submit', value: '', label: 'Location'},
+      dateTime: {type: 'input', value: moment().format('YYYYMMDhmm'), label: 'Today\'s date'}
+    }
   }
 
   setResponseState() {
@@ -42,7 +48,7 @@ export default class Root extends React.Component {
     e.preventDefault()
     await request(this.state.payloadData, this.setResponseState)
     this.setState({
-
+      payloadData: this.initialState()
     })
   }
 
