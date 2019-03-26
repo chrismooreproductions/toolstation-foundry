@@ -8,7 +8,6 @@ const renderIcon = (status, hideModal) => {
     case('success'):
       return (
         <FontAwesomeIcon
-          onClick={hideModal}
           icon={faCheckCircle}
           className={`${status === 'success' ? 'modal-icon__success' : 'modal-icon__failure'}`}
           size="2x"
@@ -20,7 +19,7 @@ const renderIcon = (status, hideModal) => {
 const Modal = props => {
   const { displayModal, modalMessage, modalStatus, hideModal } = props
   return (
-    <div className={`modal${displayModal ? ' modal-on' : ' modal-off'}`}>
+    <div className={`modal${displayModal ? ' modal-on' : ' modal-off'}`} onClick={hideModal}>
       <h2>
         {modalMessage}
       </h2>
