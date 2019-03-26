@@ -8,8 +8,12 @@ const Inputs = props => {
       type={type}
       required
       name={property}
-      className={property !== 'location' ? "form-input" : "form-input form-input__with-spinner"}
-      value={type === 'submit' ? 'Fetch Location' : property === 'dateTime' ? moment(value, 'YYYYMMDhmm').format('MMMM Do YYYY, h:mm') : value}
+      className={property === 'dateTime' ? "form-input form-input__centered" :
+                  property !== 'location' ? "form-input" : 
+                  "form-input form-input__with-spinner"}
+      value={type === 'submit' ? 'Fetch Location' : 
+              property === 'dateTime' ? moment(value, 'YYYYMMDhmm').format('MMMM Do YYYY, h:mm') :
+              value}
       disabled={property === 'dateTime' ? true : false}
       placeholder={label}
       onChange={onChange}
