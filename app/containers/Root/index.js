@@ -92,15 +92,17 @@ class Root extends React.Component {
     return (
       <div className="app-wrapper">
         <div className="container-fluid">
-          <div className="col-3">
-            <LoginForm
-              submitLoginForm = {this.submitLoginForm}
-              inputFields = {this.state.inputFields}
-              onChange = {this.onChange}
-            />
-          </div>
-          <div className="col-9">
-            {this.renderDbFields()}
+          <div className="row">
+            <div className="col-3">
+              <LoginForm
+                submitLoginForm = {this.submitLoginForm}
+                inputFields = {this.state.inputFields}
+                onChange = {this.onChange}
+              />
+            </div>
+            <div className="col-9">
+              {this.renderDbFields()}
+            </div>
           </div>
         </div>
       </div>
