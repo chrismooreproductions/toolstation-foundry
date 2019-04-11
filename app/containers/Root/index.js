@@ -18,12 +18,12 @@ class Root extends React.Component {
       },
       dbFields: {},
       outputFields: {
-        host: {name: 'Host IP', type: 'text', value: '10.0.4.16'},
-        user: {name: 'Username', type: 'text', value: 'tsbe_rw'},
-        password: {name: 'Password', type: 'password', value: 'RifOyHacUg2'},
-        database: {name: 'Database', type: 'text', value: 'toolstation_be'},
-        port: {name: 'Port', type: 'text', value: '3320'},
-        table: {name: 'Table', type: 'text', value: 'epos_config'}
+        host: {name: 'Host IP', type: 'text', value: ''},
+        user: {name: 'Username', type: 'text', value: ''},
+        password: {name: 'Password', type: 'password', value: ''},
+        database: {name: 'Database', type: 'text', value: ''},
+        port: {name: 'Port', type: 'text', value: ''},
+        table: {name: 'Table', type: 'text', value: ''}
       }
     }
     this.onChange = this.onChange.bind(this)
