@@ -12,6 +12,11 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(__dirname +'./../dist'));
 }
 
+app.post('/api/db-fields-fetch', (request, response) => {
+  console.log(request.body)
+  response.send({ message: "Here are the fields for the database table you connected to! "})
+})
+
 app.post('/api/submit-survey', (request, response) => {
   console.log(request.body)
   response.send({ message: "you hit the submit survey endpoint!" });
