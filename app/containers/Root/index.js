@@ -9,12 +9,12 @@ class Root extends React.Component {
     super(props)
     this.state = {
       inputFields: {
-        host: {name: 'Host IP', type: 'text', value: '10.0.4.16'},
-        user: {name: 'Username', type: 'text', value: 'tsbe_rw'},
-        password: {name: 'Password', type: 'password', value: 'RifOyHacUg2'},
-        database: {name: 'Database', type: 'text', value: 'toolstation_be_laravel'},
-        port: {name: 'Port', type: 'text', value: '3320'},
-        table: {name: 'Table', type: 'text', value: 'epos_config'}
+        host: {name: 'Host IP', type: 'text', value: ''},
+        user: {name: 'Username', type: 'text', value: ''},
+        password: {name: 'Password', type: 'password', value: ''},
+        database: {name: 'Database', type: 'text', value: ''},
+        port: {name: 'Port', type: 'text', value: ''},
+        table: {name: 'Table', type: 'text', value: ''}
       },
       dbFields: {},
       outputFields: {
@@ -92,13 +92,17 @@ class Root extends React.Component {
     return (
       <div className="app-wrapper">
         <div className="container-fluid">
-          <LoginForm
-            submitLoginForm = {this.submitLoginForm}
-            inputFields = {this.state.inputFields}
-            onChange = {this.onChange}
-          />
+          <div className="col-3">
+            <LoginForm
+              submitLoginForm = {this.submitLoginForm}
+              inputFields = {this.state.inputFields}
+              onChange = {this.onChange}
+            />
+          </div>
+          <div className="col-9">
+            {this.renderDbFields()}
+          </div>
         </div>
-        {this.renderDbFields()}
       </div>
     )
   }
