@@ -54,6 +54,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.17",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "moment": "^2.24.0",
+    "mysql": "^2.16.0",
+    "react-hot-loader": "^4.8.3",
     "react-transition-group": "^2.7.1"
   }
 }

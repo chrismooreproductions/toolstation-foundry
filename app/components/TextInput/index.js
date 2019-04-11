@@ -3,11 +3,15 @@ import PropTypes from 'prop-types';
 
 const TextInput = props => {
     return (
-        <div>
-            <label>
-                {props.title}
-                <input type={props.type} name={props.name} value={props.value} onChange={props.onChange} />
-            </label>
+        <div className="form-group">
+            <label>{props.title}</label>
+            <input 
+                type={props.type} 
+                name={props.name} 
+                value={props.value} 
+                onChange={props.onChange} 
+                className="form-control"
+            />
         </div>
     )
 }

@@ -1,4 +1,4 @@
-const loginRequest = (payloadData, callback) => {
+const outputRequest = (payloadData, callback) => {
     const {host, user, password, database, port, table} = payloadData
     const payload = {
         host: host.value,
@@ -8,7 +8,7 @@ const loginRequest = (payloadData, callback) => {
         port: port.value,
         table: table.value
     }
-    fetch(`/api/db-fields-fetch`, {
+    fetch(`/api/db-fields-update`, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -22,4 +22,4 @@ const loginRequest = (payloadData, callback) => {
     })
 }
 
-export default loginRequest
+export default outputRequest
