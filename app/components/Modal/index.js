@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
-const renderIcon = (status, hideModal) => {
+const renderIcon = (status) => {
   switch(status) {
     case('success'):
       return (
@@ -33,7 +33,8 @@ const Modal = props => {
 Modal.propTypes = {
   displayModal: PropTypes.bool,
   modalMessage: PropTypes.string,
-  modalStatus: PropTypes.string
+  modalStatus: PropTypes.string,
+  hideModal: PropTypes.bool
 }
 
 export default Modal

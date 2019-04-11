@@ -1,171 +1,112 @@
 import * as React from 'react'
-import FormContainer from '../FormContainer'
-import Modal from '../../components/Modal'
-import moment from 'moment';
-import request from './request'
+import { hot } from 'react-hot-loader/root'
+import LoginForm from '../LoginForm'
+import DbFields from '../DbFields'
+import loginRequest from './loginRequest'
 
-export default class Root extends React.Component {
+class Root extends React.Component {
   constructor(props) {
     super(props)
-
     this.state = {
-      page: 1,
-      payloadData: this.initialState(),
-      displayModal: false,
-      modalMessage: '',
-      modalStatus: '',
-      fetchingLocation: false
-    }
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.incrementPage = this.incrementPage.bind(this)
-    this.decrementPage = this.decrementPage.bind(this)
-    this.hideModal = this.hideModal.bind(this)
-    this.onChange = this.onChange.bind(this)
-    this.getCurrentLocation = this.getCurrentLocation.bind(this)
-    this.setResponseState = this.setResponseState.bind(this)
-    this.initialState = this.initialState.bind(this)
-  }
-
-  initialState() {
-    return {
-      title: {type: 'select', value: 'Mr', label: 'Title'},
-      name: {type: 'input', value: '', label: 'Name'},
-      dob: {type: 'date', value: '', label: 'Date of Birth'},
-      location: {type: 'submit', value: '', label: 'Location'},
-      dateTime: {type: 'input', value: moment().format('YYYYMMDhmm'), label: 'Today\'s date'}
-    }
-  }
-
-  setResponseState() {
-    return this.setState({
-      displayModal: true,
-      modalMessage: 'Thank you for your feedback',
-      modalStatus: 'success'
-    })
-  }
-
-  async handleSubmit(e) {
-    e.preventDefault()
-    await request(this.state.payloadData, this.setResponseState)
-    this.setState({
-      payloadData: this.initialState()
-    })
-  }
-
-  decrementPage() {
-    const { page } = this.state
-    this.setState({ page: page - 1 })
-  }
-
-  incrementPage() {
-    const { page } = this.state
-    this.setState({ page: page + 1 })
-  }
-
-  renderForm() {
-    const { page, payloadData } = this.state
-    let data = {}
-    switch(page) {
-      case(1):
-        data = {
-          title: payloadData.title,
-          name: payloadData.name,
-          dob: payloadData.dob
-        }
-        return (
-          <FormContainer
-            page={page}
-            showNext
-            incrementPage={this.incrementPage}
-            data={data}
-            onChange={this.onChange}
-          />
-        )
-      case(2):
-        data = {
-          location: payloadData.location,
-          dateTime: payloadData.dateTime,
-        }
-        return (
-          <FormContainer
-            page={page}
-            showPrevious
-            decrementPage={this.decrementPage}
-            data={data}
-            onChange={this.onChange}
-            showSubmit
-            handleSubmit={this.handleSubmit}
-            fetchingLocation={this.state.fetchingLocation}
-            getCurrentLocation={this.getCurrentLocation}
-            location={this.state.location}
-          />
-        )
-      default: 
-        return
-    }
-  }
-
-  onChange(event) {
-    const prop = Object.assign({}, this.state.payloadData)
-    prop[event.target.name].value = event.target.value
-    this.setState({
-      payloadData: prop
-    })
-  }
-
-  async getCurrentLocation() {
-    try {
-      this.setState({fetchingLocation: true})
-      if (navigator.geolocation) {
-        await navigator.geolocation.getCurrentPosition(position => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          }
-          const prop = Object.assign({}, this.state.payloadData)
-          prop.location.value = pos
-          return this.setState({
-            payloadData: prop,
-            fetchingLocation: false
-          })
-        })
+      inputFields: {
+        host: {name: 'Host IP', type: 'text', value: ''},
+        user: {name: 'Username', type: 'text', value: ''},
+        password: {name: 'Password', type: 'password', value: ''},
+        database: {name: 'Database', type: 'text', value: ''},
+        port: {name: 'Port', type: 'text', value: ''},
+        table: {name: 'Table', type: 'text', value: ''}
+      },
+      dbFields: {},
+      outputFields: {
+        host: {name: 'Host IP', type: 'text', value: ''},
+        user: {name: 'Username', type: 'text', value: ''},
+        password: {name: 'Password', type: 'password', value: ''},
+        database: {name: 'Database', type: 'text', value: ''},
+        port: {name: 'Port', type: 'text', value: ''},
+        table: {name: 'Table', type: 'text', value: ''}
       }
-    } 
-    catch(err) {
-      console.log('Unable to fetch location...')
-      this.setState({
-        fetchingLocation: false,
-        displayModal: false,
-        modalMessage: 'Unable to fetch location...',
-        modalStatus: '',
-      })
     }
+    this.onChange = this.onChange.bind(this)
+    this.onChangeOutputs = this.onChangeOutputs.bind(this)
+    this.renderDbFields = this.renderDbFields.bind(this)
+    this.submitLoginForm = this.submitLoginForm.bind(this)
+    this.setDbFieldsState = this.setDbFieldsState.bind(this)
   }
 
-  hideModal() {
+  submitLoginForm(e) {
+    e.preventDefault()
+    loginRequest(this.state.inputFields, this.setDbFieldsState)
+  }
+
+  onChange(e) {
+    const updatedInputFields = Object.assign({}, this.state.inputFields)
+    updatedInputFields[e.target.name].value = e.target.value
     this.setState({
-      displayModal: false,
-      page: 1
+      inputFields: updatedInputFields
     })
+  }
+
+  setDbFieldsState(responseJson) {
+    this.setState({
+      dbFields: responseJson.data
+    })
+  }
+
+  submitOutputs(e) {
+    e.preventDefault()
+  }
+
+  onChangeOutputs(e) {
+    const updatedOutputFields = Object.assign({}, this.state.outputFields)
+    updatedOutputFields[e.target.name].value = e.target.value
+    this.setState({
+      outputFields: updatedOutputFields
+    })
+  }
+
+  renderDbFields() {
+    if (Object.entries(this.state.dbFields).length === 0 && this.state.dbFields.constructor === Object) {
+      return (
+        <div>
+          <h1>No database loaded yet.</h1>
+        </div>
+      )
+    } else {
+      return (
+        <div className="container-fluid">
+          <h1>Database Field Names</h1>
+          <DbFields 
+            fields={this.state.dbFields}
+          />
+          <LoginForm
+            submitLoginForm={this.submitOutputs}
+            inputFields={this.state.outputFields}
+            onChange={this.onChangeOutputs}
+          />
+        </div>
+      )
+    }
   }
 
   render() {
-    const { displayModal, modalMessage, modalStatus, page } = this.state
     return (
       <div className="app-wrapper">
-        <div className="form-wrapper">
-          <h1>Customer Feedback</h1>
-          {this.renderForm(page)}
+        <div className="container-fluid">
+          <div className="col-3">
+            <LoginForm
+              submitLoginForm = {this.submitLoginForm}
+              inputFields = {this.state.inputFields}
+              onChange = {this.onChange}
+            />
+          </div>
+          <div className="col-9">
+            {this.renderDbFields()}
+          </div>
         </div>
-        <Modal
-          hideModal={this.hideModal}
-          displayModal={displayModal}
-          modalMessage={modalMessage}
-          modalStatus={modalStatus}
-        />
       </div>
     )
   }
 }
 
+export default hot(Root)
 // TODO: prop validation here...

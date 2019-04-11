@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser')
+const mysql = require('mysql')
 const app = express()
 const opn = require('opn');
 
@@ -11,6 +12,47 @@ app.use(bodyParser.json())
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(__dirname +'./../dist'));
 }
+
+app.post('/api/db-fields-fetch', (request, response) => {
+  console.log(request.body)
+  const connection = mysql.createConnection({
+    host: request.body.host,
+    user: request.body.user,
+    password: request.body.password,
+    database: request.body.database,
+    port: request.body.port
+  })
+  connection.connect()
+  const queryString = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME=N'" + request.body.table + "'"
+  console.log(queryString)
+  connection.query(queryString, function (err, rows, fields) {
+    if (err) throw err
+  
+    console.log('Here\'s your data: ', rows)
+    response.send({data: rows})
+  })
+  connection.end()
+})
+
+app.post('/api/db-fields-update', (request, response) => {
+  const connection = mysql.createConnection({
+    host: request.body.host,
+    user: request.body.user,
+    password: request.body.password,
+    database: request.body.database,
+    port: request.body.port
+  })
+  connection.connect()
+  const queryString = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME=N'" + request.body.table + "'"
+  console.log(queryString)
+  connection.query(queryString, function (err, rows, fields) {
+    if (err) throw err
+  
+    console.log('Here\'s your data: ', rows)
+    response.send({data: rows})
+  })
+  connection.end()
+})
 
 app.post('/api/submit-survey', (request, response) => {
   console.log(request.body)
