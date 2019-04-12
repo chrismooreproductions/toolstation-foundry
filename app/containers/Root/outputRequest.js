@@ -1,6 +1,6 @@
-const outputRequest = (payloadData, callback) => {
-    const {host, user, password, database, port, table} = payloadData
-    const payload = {
+const outputRequest = (outputHostData, dataPayload, callback) => {
+    const {host, user, password, database, port, table} = outputHostData
+    const connectionPayload = {
         host: host.value,
         user: user.value,
         password: password.value,
@@ -8,6 +8,11 @@ const outputRequest = (payloadData, callback) => {
         port: port.value,
         table: table.value
     }
+    const payload = {
+        connectionPayload: connectionPayload,
+        outputHostData: dataPayload
+    }
+    console.log(JSON.stringify(payload))
     fetch(`/api/db-fields-update`, {
         headers: {
           'Accept': 'application/json',

@@ -3,27 +3,29 @@ import { hot } from 'react-hot-loader/root'
 import LoginForm from '../LoginForm'
 import DbFields from '../DbFields'
 import loginRequest from './loginRequest'
+import outputRequest from './outputRequest'
+const clonedeep = require('lodash.clonedeep')
 
 class Root extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       inputFields: {
-        host: {name: 'Host IP', type: 'text', value: ''},
-        user: {name: 'Username', type: 'text', value: ''},
-        password: {name: 'Password', type: 'password', value: ''},
-        database: {name: 'Database', type: 'text', value: ''},
-        port: {name: 'Port', type: 'text', value: ''},
-        table: {name: 'Table', type: 'text', value: ''}
+        host: {name: 'Host IP', type: 'text', value: '10.0.4.16'},
+        user: {name: 'Username', type: 'text', value: 'tsbe_rw'},
+        password: {name: 'Password', type: 'password', value: 'RifOyHacUg2'},
+        database: {name: 'Database', type: 'text', value: 'toolstation_be'},
+        port: {name: 'Port', type: 'text', value: '3320'},
+        table: {name: 'Table', type: 'text', value: 'stock_parts'}
       },
       dbFields: {},
       outputFields: {
-        host: {name: 'Host IP', type: 'text', value: ''},
-        user: {name: 'Username', type: 'text', value: ''},
-        password: {name: 'Password', type: 'password', value: ''},
-        database: {name: 'Database', type: 'text', value: ''},
-        port: {name: 'Port', type: 'text', value: ''},
-        table: {name: 'Table', type: 'text', value: ''}
+        host: {name: 'Host IP', type: 'text', value: '127.0.0.1'},
+        user: {name: 'Username', type: 'text', value: 'root'},
+        password: {name: 'Password', type: 'password', value: 'password'},
+        database: {name: 'Database', type: 'text', value: 'toolstation'},
+        port: {name: 'Port', type: 'text', value: '3306'},
+        table: {name: 'Table', type: 'text', value: 'stock_parts'}
       }
     }
     this.onChange = this.onChange.bind(this)
@@ -31,6 +33,9 @@ class Root extends React.Component {
     this.renderDbFields = this.renderDbFields.bind(this)
     this.submitLoginForm = this.submitLoginForm.bind(this)
     this.setDbFieldsState = this.setDbFieldsState.bind(this)
+    this.onChangeDbFieldName = this.onChangeDbFieldName.bind(this)
+    this.migrateComplete = this.migrateComplete.bind(this)
+    this.submitOutputForm = this.submitOutputForm.bind(this)
   }
 
   submitLoginForm(e) {
@@ -47,13 +52,40 @@ class Root extends React.Component {
   }
 
   setDbFieldsState(responseJson) {
+    responseJson.data.map(dataPoint => {
+      return (
+        // Might want to put a bunch of properties here 
+        // or do some initial setting of state on to the
+        // revised database schema details.
+        dataPoint.OUTPUT_FIELD_NAME = dataPoint.COLUMN_NAME
+      )
+    })
     this.setState({
       dbFields: responseJson.data
     })
   }
 
-  submitOutputs(e) {
+  submitOutputForm(e) {
     e.preventDefault()
+    outputRequest(this.state.outputFields, this.state.dbFields, this.migrateComplete)
+  }
+
+  migrateComplete() {
+    console.log('Migration Complete!')
+  }
+
+  onChangeDbFieldName(e) {
+    const updatedDbFields = clonedeep(this.state.dbFields)
+    const fieldIndex = (fields, e) => {
+      for (var i = 0; i < fields.length; i++) {
+        if (updatedDbFields[i].COLUMN_NAME === e.target.name) {
+          return i
+        }
+      }
+    }
+    const updatedDbFieldIndex = fieldIndex(updatedDbFields, e)
+    updatedDbFields[updatedDbFieldIndex].OUTPUT_FIELD_NAME = e.target.value
+    this.setState({dbFields: updatedDbFields})
   }
 
   onChangeOutputs(e) {
@@ -73,16 +105,22 @@ class Root extends React.Component {
       )
     } else {
       return (
-        <div className="container-fluid">
-          <h1>Database Field Names</h1>
-          <DbFields 
-            fields={this.state.dbFields}
-          />
-          <LoginForm
-            submitLoginForm={this.submitOutputs}
-            inputFields={this.state.outputFields}
-            onChange={this.onChangeOutputs}
-          />
+        <div className="row">
+          <div className="col-7">
+            <h1>Database Field Names</h1>
+            <DbFields 
+              fields={this.state.dbFields}
+              onChangeDbFieldName={this.onChangeDbFieldName}
+            />
+          </div>
+          <div className="col-5">
+            <h1>Output Database Credentials</h1>
+            <LoginForm
+              submitLoginForm={this.submitOutputForm}
+              inputFields={this.state.outputFields}
+              onChange={this.onChangeOutputs}
+            />
+          </div>
         </div>
       )
     }
@@ -94,6 +132,7 @@ class Root extends React.Component {
         <div className="container-fluid">
           <div className="row">
             <div className="col-3">
+              <h1>Input Database Credentials</h1>
               <LoginForm
                 submitLoginForm = {this.submitLoginForm}
                 inputFields = {this.state.inputFields}

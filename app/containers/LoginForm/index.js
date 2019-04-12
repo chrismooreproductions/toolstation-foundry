@@ -24,7 +24,6 @@ export default class LoginForm extends React.Component {
     render() {
         return (
             <div>
-                <h1>Database Connection</h1>
                 <form onSubmit={this.props.submitLoginForm}>
                     {this.renderForm()}
                     <input type='submit' value='Submit' className='btn btn-primary'/>

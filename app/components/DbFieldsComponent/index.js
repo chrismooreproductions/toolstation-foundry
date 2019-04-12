@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const DbFieldsComponent = props => {
-    console.log(props)
     return (
         <div className="row">
             <div className="col-6">
@@ -21,6 +20,9 @@ const DbFieldsComponent = props => {
                     <label>New Field Name</label>
                     <input
                         key={props.field.COLUMN_NAME} 
+                        name={props.field.COLUMN_NAME}
+                        onChange={props.onChangeDbFieldName}
+                        value={props.field.OUTPUT_FIELD_NAME}
                         className="form-control"
                     />
                 </div>

@@ -35,14 +35,17 @@ app.post('/api/db-fields-fetch', (request, response) => {
 })
 
 app.post('/api/db-fields-update', (request, response) => {
+  console.log(request)
+  const {host, user, password, database, port} = request.body.connectionPayload
   const connection = mysql.createConnection({
-    host: request.body.host,
-    user: request.body.user,
-    password: request.body.password,
-    database: request.body.database,
-    port: request.body.port
+    host: host,
+    user: user,
+    password: password,
+    database: database,
+    port: port
   })
   connection.connect()
+  // Need to finish generating the SQL queries here...
   const queryString = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME=N'" + request.body.table + "'"
   console.log(queryString)
   connection.query(queryString, function (err, rows, fields) {
