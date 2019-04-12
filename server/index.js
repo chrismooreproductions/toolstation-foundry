@@ -36,7 +36,7 @@ app.post('/api/db-fields-fetch', (request, response) => {
 
 app.post('/api/db-fields-update', (request, response) => {
   console.log(request)
-  const {host, user, password, database, port} = request.body.connectionPayload
+  const {host, user, password, database, port, table} = request.body.connectionPayload
   const connection = mysql.createConnection({
     host: host,
     user: user,
@@ -46,12 +46,12 @@ app.post('/api/db-fields-update', (request, response) => {
   })
   connection.connect()
   // Need to finish generating the SQL queries here...
-  const queryString = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME=N'" + request.body.table + "'"
+  const queryString = "DROP TABLE IF EXISTS " + database + "." + table + ";"
   console.log(queryString)
   connection.query(queryString, function (err, rows, fields) {
     if (err) throw err
   
-    console.log('Here\'s your data: ', rows)
+    console.log('Deleted the data for ! ', rows)
     response.send({data: rows})
   })
   connection.end()
